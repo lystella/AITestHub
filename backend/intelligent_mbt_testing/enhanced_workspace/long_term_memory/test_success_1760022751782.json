@@ -1,0 +1,14 @@
+{
+  "id": "test_success_1760022751782",
+  "agent_type": "test",
+  "experience_type": "success",
+  "content": "测试记忆存储修复",
+  "embedding": [],
+  "metadata": {
+    "test": true
+  },
+  "timestamp": "2025-10-09T23:12:31.782549",
+  "success_score": 0.8,
+  "usage_count": 0,
+  "last_accessed": null
+}

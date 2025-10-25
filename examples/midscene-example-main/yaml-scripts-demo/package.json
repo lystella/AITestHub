@@ -1,0 +1,17 @@
+{
+  "name": "yaml-scripts-demo",
+  "private": true,
+  "version": "1.0.0",
+  "description": "> quick start",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "midscene ./midscene-scripts",
+    "test:config": "midscene --config config.yml"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@midscene/cli": "latest"
+  }
+}

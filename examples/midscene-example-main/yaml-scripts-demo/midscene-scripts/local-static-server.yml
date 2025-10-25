@@ -1,0 +1,13 @@
+# serve a local static server and assert the button text
+
+target:
+  serve: ./public
+  url: index.html
+
+tasks:
+  - name: page redirect
+    flow:
+      - aiAction: click the link 'Go to planet list'
+      - sleep: 1000
+      - aiAssert: The page contains 'Earth'
+

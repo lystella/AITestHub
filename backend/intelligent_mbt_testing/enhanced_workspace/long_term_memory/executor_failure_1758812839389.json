@@ -1,0 +1,12 @@
+{
+  "id": "executor_failure_1758812839389",
+  "agent_type": "executor",
+  "experience_type": "failure",
+  "content": "执行Midscene测试时遇到超时问题，需要优化等待策略",
+  "embedding": [],
+  "metadata": {},
+  "timestamp": "2025-09-25T23:07:19.389234",
+  "success_score": 0.3,
+  "usage_count": 0,
+  "last_accessed": null
+}

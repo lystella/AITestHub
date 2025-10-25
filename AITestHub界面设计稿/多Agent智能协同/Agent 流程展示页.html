@@ -1,0 +1,1165 @@
+
+                <!DOCTYPE html>
+                <html lang="zh">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Agent 流程展示页</title>
+                  <style>
+                    *,
+                    *::before,
+                    *::after {
+                      box-sizing: border-box;
+                      margin: 0;
+                    }
+                    .iframe-outer {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      display: flex;
+                      justify-content: center;
+                      background-color: #E0E0E0;
+                    }
+                    .iframe-wrapper {
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 auto;
+                      transform-origin: center top;
+                      flex-shrink: 0;
+                    }
+                    #dynamicIframe {
+                      border: none;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  </style>
+                  <script>
+                const width = 1920
+                const height = 1080
+                const resolutionRatio = width && height ? width / height : 1
+                const pageNameMap = {
+                  'agent_process_display_page': 'Agent 流程展示页'
+                }
+                function setIframeSize(w, h) {
+                  const currentContainerRadio = w / h
+                  let widthValue = w
+                  let heightValue = h
+                  let zoom = 1
+                  if (currentContainerRadio > resolutionRatio) {
+                    widthValue = h * resolutionRatio
+                    heightValue = h
+                  } else {
+                    widthValue = w
+                    heightValue = w / resolutionRatio
+                  }
+                  zoom = width ? widthValue / width : 1
+                  return {
+                    width: widthValue / zoom + 'px',
+                    height: heightValue / zoom + 'px',
+                    zoom,
+                  }
+                }
+                function adjustIframeSize() {
+                  const iframeWrapper = document.querySelector(".iframe-wrapper")
+                  const { width, height, zoom } = setIframeSize(window.innerWidth, window.innerHeight)
+                  iframeWrapper.style.height = height
+                  iframeWrapper.style.width = width
+                  iframeWrapper.style.transform = 'scale(' + zoom + ')'
+                }
+                function sanitizeFilename(name) {
+                  return name.replace(/[\/:*?"<>|]/g, '_')
+                }
+                function handlePostMessage(event) {
+                  if (!event.data) {
+                    return
+                  }
+                  const { type, targetPageId } = event.data
+                  const targetPageName = pageNameMap[targetPageId]
+                  if (type === "iframeNavigation" && targetPageId && targetPageName) {
+                    window.location.href = targetPageName + '.html'
+                  }
+                }
+                window.addEventListener('message', handlePostMessage)
+                window.onload = adjustIframeSize
+                window.onresize = adjustIframeSize
+                window.onunload = () => {
+                  window.removeEventListener('message', handlePostMessage)
+                }
+              </script>
+                </head>
+                <body>
+                  <div class="iframe-outer">
+                    <div class="iframe-wrapper">
+                      <iframe id="dynamicIframe" srcdoc='<html lang="简体中文" data-theme="light"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 流程展示页</title>
+    <link href="./assets/static/uxbot/daisyui@5.css" rel="stylesheet" type="text/css">
+    <script src="./assets/static/uxbot/tailwind-browser@4.js"></script>
+    <link href="./assets/static/uxbot/daisyui-themes.css" rel="stylesheet" type="text/css">
+    <script src="./assets/3/3.1.1/iconify.min.js"></script>
+    <style>
+/* DaisyUI Theme Variables Customization for Agent Process Display System */
+:root {
+  /* Bright, bold and highly saturated custom brand colors for flat illustration style */
+  --color-primary: rgba(59, 130, 246, 1); /* Bright Blue #3B82F6 */
+  --color-primary-content: rgba(255, 255, 255, 1);
+  --color-secondary: rgba(16, 185, 129, 1); /* Emerald Green #10B981 */
+  --color-secondary-content: rgba(255, 255, 255, 1);
+  --color-accent: rgba(245, 101, 101, 1); /* Bright Red #F56565 */
+  --color-accent-content: rgba(255, 255, 255, 1);
+  --color-base-100: rgba(255, 255, 255, 1);
+  --color-base-200: rgba(249, 250, 251, 1); /* #F9FAFB */
+  --color-base-300: rgba(229, 231, 235, 1); /* #E5E7EB */
+  --color-base-content: rgba(17, 24, 39, 1); /* #111827 */
+  --color-success: rgba(34, 197, 94, 1); /* Green #22C55E */
+  --color-warning: rgba(251, 191, 36, 1); /* Amber #FBBF24 */
+  --color-error: rgba(239, 68, 68, 1); /* Red #EF4444 */
+  --color-info: rgba(59, 130, 246, 1); /* Blue #3B82F6 */
+  --radius-box: 0.5rem;
+  --radius-field: 0.25rem;
+  --border: 1px;
+}
+
+/* Global component styles */
+.transition-all-smooth {
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-hover {
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.shadow-soft {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header height consistency */
+.header-height {
+  height: 64px;
+}
+
+/* Sidebar dimensions */
+.sidebar-expanded {
+  width: 280px;
+}
+
+.sidebar-collapsed {
+  width: 72px;
+}
+
+/* Focus styles for accessibility */
+.focus-primary:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Process step indicator styles */
+.process-step {
+  transition: all 0.3s ease-in-out;
+}
+
+.process-step.completed {
+  background: linear-gradient(135deg, var(--color-success), rgba(34, 197, 94, 0.8));
+  color: var(--color-base-100);
+}
+
+.process-step.active {
+  background: linear-gradient(135deg, var(--color-primary), rgba(59, 130, 246, 0.8));
+  color: var(--color-base-100);
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+.process-step.pending {
+  background: var(--color-base-200);
+  color: var(--color-base-content);
+}
+
+/* Upload area styling */
+.upload-zone {
+  border: 2px dashed var(--color-base-300);
+  transition: border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.upload-zone:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+.upload-zone.dragover {
+  border-color: var(--color-success);
+  background-color: rgba(34, 197, 94, 0.1);
+}
+</style> <style>
+#MainContentArea::before {
+    content: &#39;&#39;;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.04) 1px, transparent 0);
+    background-size: 25px 25px;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.btn {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.btn:hover:not([disabled]) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#upload-zone.dragover {
+    border-color: var(--color-success);
+    background-color: rgba(34, 197, 94, 0.1);
+    transform: scale(1.02);
+}
+
+#file-info {
+    animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.process-step .step-indicator {
+    border-color: var(--color-base-300);
+    transition: all 0.3s ease-in-out;
+}
+.process-step .step-icon {
+    color: var(--color-base-content);
+    opacity: 0.5;
+    transition: all 0.3s ease-in-out;
+}
+
+.process-step.active .step-indicator {
+    border-color: var(--color-primary);
+    animation: pulse-ring 1.5s infinite;
+}
+.process-step.active .step-icon {
+    color: var(--color-primary);
+    opacity: 1;
+}
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.process-step.completed .step-indicator {
+    border-color: var(--color-success);
+    background: var(--color-success);
+}
+.process-step.completed .step-icon {
+    color: var(--color-success-content);
+    opacity: 1;
+}
+.process-step.completed .view-details-btn {
+    display: inline-flex;
+    cursor: pointer;
+}
+.process-step.completed {
+    cursor: pointer;
+}
+
+.log-item {
+    animation: fadeInDown 0.5s ease-out forwards;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#DocumentUploadAndControl,
+#AgentProcessExecutionView {
+    will-change: opacity, transform;
+}
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+@keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.98); pointer-events: none; }
+}
+</style>
+  <script src="./assets/static/uxbot/25_6/holder.js"></script></head>
+  <body class="bg-base-200">
+    <div class="flex h-screen overflow-hidden">
+      <div data-section-id="common_sidebar" data-section-type="common_sidebar">
+  <div class="h-full bg-base-100 border-r border-base-300 transition-all-smooth flex flex-col">
+    <!-- Sidebar content -->
+    <div class="flex-1 overflow-y-auto">
+      <ul class="menu p-4 gap-2">
+        <!-- 首页仪表盘 -->
+        <li>
+          <a onclick="navigateTo(&#39;home_page&#39;)" class="nav-hover focus-primary group" data-current-page="home_page">
+            <span class="iconify" data-icon="heroicons:home" data-width="20"></span>
+            <span class="sidebar-text font-medium">首页仪表盘</span>
+          </a>
+        </li>
+        
+        <!-- Agent工作台 -->
+        <li>
+          <a onclick="navigateTo(&#39;agent_process_display_page&#39;)" class="nav-hover focus-primary group" data-current-page="agent_process_display_page">
+            <span class="iconify" data-icon="heroicons:cog-6-tooth" data-width="20"></span>
+            <span class="sidebar-text font-medium">Agent工作台</span>
+          </a>
+        </li>
+        
+        <!-- 执行历史 -->
+        <li>
+          <a onclick="navigateTo(&#39;history_page&#39;)" class="nav-hover focus-primary group" data-current-page="history_page">
+            <span class="iconify" data-icon="heroicons:clock" data-width="20"></span>
+            <span class="sidebar-text font-medium">执行历史</span>
+          </a>
+        </li>
+        
+        <div class="divider my-2"></div>
+        
+        <!-- 快速操作 -->
+        <li class="menu-title">
+          <span class="sidebar-text text-xs">快速操作</span>
+        </li>
+        
+        <li>
+          <a onclick="navigateTo(&#39;agent_process_display_page&#39;)" class="nav-hover focus-primary group">
+            <span class="iconify" data-icon="heroicons:document-plus" data-width="20"></span>
+            <span class="sidebar-text font-medium">新建测试</span>
+          </a>
+        </li>
+        
+        <li>
+          <a onclick="navigateTo(&#39;result_detail_page&#39;)" class="nav-hover focus-primary group">
+            <span class="iconify" data-icon="heroicons:document-text" data-width="20"></span>
+            <span class="sidebar-text font-medium">查看报告</span>
+          </a>
+        </li>
+        
+        <div class="divider my-2"></div>
+        
+        <!-- 系统管理 -->
+        <li class="menu-title">
+          <span class="sidebar-text text-xs">系统管理</span>
+        </li>
+        
+        <li>
+          <a onclick="navigateTo(&#39;user_settings_page&#39;)" class="nav-hover focus-primary group" data-current-page="user_settings_page">
+            <span class="iconify" data-icon="heroicons:user-circle" data-width="20"></span>
+            <span class="sidebar-text font-medium">个人设置</span>
+          </a>
+        </li>
+        
+        <li>
+          <a class="nav-hover focus-primary group">
+            <span class="iconify" data-icon="heroicons:shield-check" data-width="20"></span>
+            <span class="sidebar-text font-medium">安全中心</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sidebar footer -->
+    <div class="p-4 border-t border-base-300">
+      <div class="text-center">
+        <button class="btn btn-sm btn-ghost w-full nav-hover focus-primary">
+          <span class="iconify" data-icon="heroicons:question-mark-circle" data-width="16"></span>
+          <span class="sidebar-text text-xs">帮助支持</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+[data-section-id="common_sidebar"] {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+}
+
+[data-section-id="common_sidebar"].sidebar-collapsed {
+  width: 72px;
+}
+
+[data-section-id="common_sidebar"].sidebar-collapsed .sidebar-text {
+  display: none;
+}
+
+[data-section-id="common_sidebar"].sidebar-expanded {
+  width: 280px;
+}
+
+[data-section-id="common_sidebar"] .menu li > *:where(.active) {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
+}
+
+[data-section-id="common_sidebar"] .menu-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+</style>
+
+<script>
+(function() {
+// Set active navigation item based on current page
+window.setActiveSidebarItem = function(pageId) {
+  const sidebar = document.querySelector(&#39;[data-section-id="common_sidebar"]&#39;);
+  if (!sidebar) return;
+
+  // Remove active class from all items
+  const allItems = sidebar.querySelectorAll(&#39;.menu a&#39;);
+  allItems.forEach(item => item.classList.remove(&#39;active&#39;));
+
+  // Add active class to current page
+  const currentItem = sidebar.querySelector(`[data-current-page="${pageId}"]`);
+  if (currentItem) {
+    currentItem.classList.add(&#39;active&#39;);
+  }
+};
+})();
+</script>
+      <div class="flex-1 flex flex-col">
+        <div data-section-id="common_header" data-section-type="common_header">
+  <div class="navbar bg-base-100 shadow-soft border-b border-base-300 header-height px-4">
+    <!-- Left section: Menu toggle and Logo -->
+    <div class="navbar-start">
+      <button aria-label="切换侧边栏" class="btn btn-ghost btn-circle focus-primary" onclick="toggleSidebar()">
+        <span class="iconify" data-icon="heroicons:bars-3" data-width="24"></span>
+      </button>
+      <div class="flex items-center ml-2">
+        <img alt="智能Agent系统 Logo" class="w-10 h-10" data-src="placehold.co/40x40.png?text=AI"><span class="ml-3 text-xl font-semibold text-primary hidden lg:block">智能Agent测试系统</span>
+      </div>
+    </div>
+    <!-- Center section: Main navigation -->
+    <div class="navbar-center hidden xl:flex">
+      <ul class="menu menu-horizontal px-1 gap-1">
+        <li>
+          <a class="nav-hover focus-primary" onclick="navigateTo(&#39;home_page&#39;)">首页仪表盘</a>
+        </li>
+        <li>
+          <a class="nav-hover focus-primary" onclick="navigateTo(&#39;agent_process_display_page&#39;)">Agent工作台</a>
+        </li>
+        <li>
+          <a class="nav-hover focus-primary" onclick="navigateTo(&#39;history_page&#39;)">执行历史</a>
+        </li>
+      </ul>
+    </div>
+    <!-- Right section: Search, notifications, user profile -->
+    <div class="navbar-end">
+      <!-- Global search -->
+      <div class="form-control hidden md:block mr-4">
+        <div class="join">
+          <input type="text" placeholder="搜索执行记录..." class="input input-bordered input-sm join-item w-48 focus-primary im49eq spark-custom-im49eq" id="im49eq"><button aria-label="搜索" class="btn btn-sm join-item btn-primary">
+            <span class="iconify" data-icon="heroicons:magnifying-glass" data-width="16"></span>
+          </button>
+        </div>
+      </div>
+      <!-- Search icon for mobile --><button aria-label="搜索" class="btn btn-ghost btn-circle md:hidden focus-primary">
+        <span class="iconify" data-icon="heroicons:magnifying-glass" data-width="20"></span></button><!-- Notifications -->
+      <div class="indicator mr-2">
+        <span class="indicator-item badge badge-accent badge-sm">2</span><button aria-label="通知中心" class="btn btn-ghost btn-circle focus-primary">
+          <span class="iconify" data-icon="heroicons:bell" data-width="20"></span>
+        </button>
+      </div>
+      <!-- User profile dropdown -->
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar focus-primary">
+          <div class="w-10 rounded-full">
+            <img alt="用户头像" data-src="placehold.co/40x40.png?text=User">
+          </div>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow-soft bg-base-100 rounded-box w-52">
+          <li class="menu-title"><span>用户中心</span></li>
+          <li>
+            <a class="nav-hover focus-primary" onclick="navigateTo(&#39;user_settings_page&#39;)"><span class="iconify" data-icon="heroicons:user" data-width="16"></span><span>个人设置</span></a>
+          </li>
+          <li>
+            <a class="nav-hover focus-primary"><span class="iconify" data-icon="heroicons:cog-6-tooth" data-width="16"></span><span>系统配置</span></a>
+          </li>
+          <div class="divider my-1"></div>
+          <li>
+            <a class="nav-hover focus-primary text-error" onclick="navigateTo(&#39;login_page&#39;)"><span class="iconify" data-icon="heroicons:arrow-right-on-rectangle" data-width="16"></span><span>退出登录</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div data-section-id="common_breadcrumbs" data-section-type="common_section">
+  <div class="breadcrumbs text-sm py-3 px-4 bg-base-100">
+    <ul id="breadcrumb-list">
+      <!-- Breadcrumb items will be dynamically inserted here -->
+    </ul>
+  </div>
+</div>
+
+<style>
+[data-section-id="common_breadcrumbs"] .breadcrumbs a {
+  color: var(--color-primary);
+  transition: color 0.15s ease-in-out;
+}
+
+[data-section-id="common_breadcrumbs"] .breadcrumbs a:hover {
+  color: var(--color-secondary);
+}
+</style>
+
+<script>
+(function() {
+// Breadcrumb utility functions
+window.setBreadcrumbs = function(breadcrumbItems) {
+  const breadcrumbList = document.getElementById(&#39;breadcrumb-list&#39;);
+  if (!breadcrumbList) return;
+
+  breadcrumbList.innerHTML = &#39;&#39;;
+  
+  breadcrumbItems.forEach((item, index) => {
+    const li = document.createElement(&#39;li&#39;);
+    
+    if (item.pageId &amp;&amp; index < breadcrumbItems.length - 1) {
+      // Clickable breadcrumb item
+      const a = document.createElement(&#39;a&#39;);
+      a.onclick = () => navigateTo(item.pageId);
+      a.className = &#39;focus-primary cursor-pointer&#39;;
+      
+      if (item.icon) {
+        const iconSpan = document.createElement(&#39;span&#39;);
+        iconSpan.className = &#39;iconify mr-1&#39;;
+        iconSpan.setAttribute(&#39;data-icon&#39;, item.icon);
+        iconSpan.setAttribute(&#39;data-width&#39;, &#39;16&#39;);
+        a.appendChild(iconSpan);
+      }
+      
+      const textSpan = document.createElement(&#39;span&#39;);
+      textSpan.textContent = item.text;
+      a.appendChild(textSpan);
+      li.appendChild(a);
+    } else {
+      // Current page (non-clickable)
+      const span = document.createElement(&#39;span&#39;);
+      span.className = &#39;text-base-content/70&#39;;
+      
+      if (item.icon) {
+        const iconSpan = document.createElement(&#39;span&#39;);
+        iconSpan.className = &#39;iconify mr-1&#39;;
+        iconSpan.setAttribute(&#39;data-icon&#39;, item.icon);
+        iconSpan.setAttribute(&#39;data-width&#39;, &#39;16&#39;);
+        span.appendChild(iconSpan);
+      }
+      
+      const textSpan = document.createElement(&#39;span&#39;);
+      textSpan.textContent = item.text;
+      span.appendChild(textSpan);
+      li.appendChild(span);
+    }
+    
+    breadcrumbList.appendChild(li);
+  });
+};
+
+// Example usage function for pages to call
+window.updateBreadcrumbs = function(currentPageInfo) {
+  const defaultBreadcrumbs = [
+    { text: &#39;首页&#39;, pageId: &#39;home_page&#39;, icon: &#39;heroicons:home&#39; }
+  ];
+  
+  if (currentPageInfo.category) {
+    defaultBreadcrumbs.push({
+      text: currentPageInfo.category,
+      pageId: currentPageInfo.categoryPageId
+    });
+  }
+  
+  if (currentPageInfo.subcategory) {
+    defaultBreadcrumbs.push({
+      text: currentPageInfo.subcategory,
+      pageId: currentPageInfo.subcategoryPageId
+    });
+  }
+  
+  defaultBreadcrumbs.push({
+    text: currentPageInfo.current,
+    icon: currentPageInfo.icon
+  });
+  
+  setBreadcrumbs(defaultBreadcrumbs);
+};
+})();
+</script>
+        <main class="flex-1 flex flex-col p-6 lg:p-8 overflow-y-auto">
+          <div class="h-full flex flex-col gap-6">
+            <section id="ProcessStatusHeader">
+              <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-extrabold text-base-content">
+                  Agent 流程中心
+                </h1>
+                <button id="upload-doc-header-btn" class="btn btn-primary shadow-soft">
+                  <span class="iconify" data-icon="heroicons:document-arrow-up-solid" data-width="20"></span><span>上传需求文档</span>
+                </button>
+              </div>
+            </section>
+            <section id="MainContentArea" class="flex-1 flex flex-col items-center justify-center bg-base-100 rounded-box shadow-soft p-4 sm:p-8 relative overflow-hidden">
+              <div id="DocumentUploadAndControl" class="w-full max-w-4xl flex flex-col items-center justify-center text-center transition-all duration-500 ease-in-out">
+                <div id="upload-zone" class="w-full rounded-lg p-10 border-2 border-dashed border-base-300 cursor-pointer transition-all-smooth bg-gradient-to-br from-primary/5 to-secondary/5">
+                  <div class="flex flex-col items-center gap-4">
+                    <span class="iconify text-primary" data-icon="heroicons:cloud-arrow-up" data-width="64"></span>
+                    <p class="text-xl font-bold text-base-content">
+                      拖放文件到此处，或<span class="text-primary link link-hover">点击上传</span>
+                    </p>
+                    <p class="text-sm text-base-content/60">
+                      支持 PDF, Word, TXT 格式，文件大小不超过 10MB
+                    </p>
+                  </div>
+                </div>
+                <div id="file-info" class="hidden w-full max-w-lg bg-success/10 border border-success/20 rounded-lg p-4 mt-6 text-left">
+                  <div class="flex items-center gap-4">
+                    <span class="iconify text-success" data-icon="heroicons:document-check-solid" data-width="28"></span>
+                    <div class="flex-1">
+                      <p id="file-name" class="font-bold text-base-content"></p>
+                      <p id="file-size" class="text-xs text-base-content/60"></p>
+                    </div>
+                    <div class="badge badge-success font-bold text-xs">
+                      已验证
+                    </div>
+                  </div>
+                </div>
+                <div class="flex gap-4 mt-8">
+                  <button id="start-analysis-btn" disabled="" class="btn btn-primary btn-lg shadow-soft">
+                    <span class="iconify" data-icon="heroicons:play-solid" data-width="20"></span>
+                    开始分析</button><button id="reset-process-btn" class="btn btn-ghost btn-lg hidden">
+                    <span class="iconify" data-icon="heroicons:arrow-path-solid" data-width="20"></span>
+                    重置流程
+                  </button>
+                </div>
+              </div>
+              <div id="AgentProcessExecutionView" class="hidden w-full flex flex-col gap-8 transition-all duration-500 ease-in-out">
+                <section id="ProcessProgressDisplay" class="w-full">
+                  <div class="relative w-full">
+                    <div class="absolute top-8 left-0 right-0 h-1 bg-base-300"></div>
+                    <div id="progress-line" class="absolute top-8 left-0 h-1 bg-gradient-to-r from-primary to-secondary transition-all-smooth duration-1000" style="width: 0%;"></div>
+                    <div class="flex justify-between items-start relative z-10">
+                      <div data-step-id="requirement-analysis" class="process-step pending flex flex-col items-center w-64">
+                        <div class="step-indicator w-16 h-16 rounded-full flex items-center justify-center border-4 bg-base-100 mb-4">
+                          <span class="step-icon iconify" data-icon="heroicons:document-magnifying-glass-solid" data-width="32"></span>
+                        </div>
+                        <h3 class="font-bold text-lg text-base-content">
+                          需求分析
+                        </h3>
+                        <p class="text-sm text-base-content/70 mb-2">
+                          解析文档内容
+                        </p>
+                        <button class="btn btn-primary btn-sm hidden view-details-btn" onclick="navigateTo(&#39;result_detail_page&#39;)">
+                          查看详情
+                        </button>
+                      </div>
+                      <div data-step-id="test-generation" class="process-step pending flex flex-col items-center w-64">
+                        <div class="step-indicator w-16 h-16 rounded-full flex items-center justify-center border-4 bg-base-100 mb-4">
+                          <span class="step-icon iconify" data-icon="heroicons:wrench-screwdriver-solid" data-width="32"></span>
+                        </div>
+                        <h3 class="font-bold text-lg text-base-content">
+                          用例生成
+                        </h3>
+                        <p class="text-sm text-base-content/70 mb-2">
+                          生成测试用例
+                        </p>
+                        <button class="btn btn-primary btn-sm hidden view-details-btn" onclick="navigateTo(&#39;result_detail_page&#39;)">
+                          查看详情
+                        </button>
+                      </div>
+                      <div data-step-id="test-execution" class="process-step pending flex flex-col items-center w-64">
+                        <div class="step-indicator w-16 h-16 rounded-full flex items-center justify-center border-4 bg-base-100 mb-4">
+                          <span class="step-icon iconify" data-icon="heroicons:play-circle-solid" data-width="32"></span>
+                        </div>
+                        <h3 class="font-bold text-lg text-base-content">
+                          用例执行
+                        </h3>
+                        <p class="text-sm text-base-content/70 mb-2">
+                          执行测试用例
+                        </p>
+                        <button class="btn btn-primary btn-sm hidden view-details-btn" onclick="navigateTo(&#39;result_detail_page&#39;)">
+                          查看详情
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <div class="divider my-0"></div>
+                <section id="AgentProcessDescription" class="w-full">
+                  <div id="process-output-container" class="bg-base-200/50 rounded-lg p-6 min-h-64">
+                    <h3 class="text-lg font-semibold text-base-content mb-4 flex items-center gap-2">
+                      <span class="iconify" data-icon="heroicons:clipboard-document-list" data-width="24"></span><span id="output-title">Agent 执行过程描述</span>
+                    </h3>
+                    <div id="log-list" class="flex flex-col gap-3 font-mono text-sm max-h-64 overflow-y-auto pr-4">
+                      <p class="text-base-content/60 animate-pulse">
+                        等待开始执行...
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+          </div>
+        </main>
+        <div data-section-id="common_footer" data-section-type="common_footer">
+  <footer class="footer footer-center p-6 bg-base-200 text-base-content border-t border-base-300">
+    <div class="grid grid-flow-col gap-4">
+      <a onclick="navigateTo(&#39;home_page&#39;)" class="link link-hover focus-primary">关于系统</a>
+      <a class="link link-hover focus-primary">使用指南</a>
+      <a class="link link-hover focus-primary">技术支持</a>
+      <a class="link link-hover focus-primary">API文档</a>
+      <a class="link link-hover focus-primary">隐私政策</a>
+    </div>
+    
+    <div class="grid grid-flow-col gap-4">
+      <a class="link link-hover focus-primary" aria-label="GitHub">
+        <span class="iconify" data-icon="simple-icons:github" data-width="20"></span>
+      </a>
+      <a class="link link-hover focus-primary" aria-label="技术文档">
+        <span class="iconify" data-icon="heroicons:document-text" data-width="20"></span>
+      </a>
+      <a class="link link-hover focus-primary" aria-label="邮件支持">
+        <span class="iconify" data-icon="heroicons:envelope" data-width="20"></span>
+      </a>
+    </div>
+    
+    <div class="text-center">
+      <p>© 2024 智能Agent测试系统. 版权所有 | <span class="text-primary font-medium">AI驱动的自动化测试平台</span></p>
+      <p class="text-xs opacity-70 mt-1">技术支持: agent-support@example.com | 在线文档: docs.example.com</p>
+    </div>
+  </footer>
+</div>
+      </div>
+    </div>
+    <script>
+(function() {
+&#39;use strict&#39;;
+
+// Initialize APP_GLOBALS namespace
+window.APP_GLOBALS = window.APP_GLOBALS || {};
+
+// Global navigation utility
+window.navigateTo = function(targetPageId) {
+  const isInIframe = window.self !== window.top;
+  const targetFileName = `${targetPageId}.html`;
+  
+  if (isInIframe) {
+    window.parent.postMessage({
+      type: &#39;iframeNavigation&#39;,
+      targetPageId: targetPageId
+    }, &#39;*&#39;);
+  } else {
+    window.location.href = targetFileName;
+  }
+};
+
+// Sidebar collapse/expand utility
+window.toggleSidebar = function() {
+  const sidebar = document.querySelector(&#39;[data-section-id="common_sidebar"]&#39;);
+  const isCollapsed = sidebar.classList.contains(&#39;sidebar-collapsed&#39;);
+  
+  if (isCollapsed) {
+    sidebar.classList.remove(&#39;sidebar-collapsed&#39;);
+    sidebar.classList.add(&#39;sidebar-expanded&#39;);
+    localStorage.setItem(&#39;sidebarState&#39;, &#39;expanded&#39;);
+  } else {
+    sidebar.classList.remove(&#39;sidebar-expanded&#39;);
+    sidebar.classList.add(&#39;sidebar-collapsed&#39;);
+    localStorage.setItem(&#39;sidebarState&#39;, &#39;collapsed&#39;);
+  }
+};
+
+// Initialize sidebar state from localStorage
+window.initSidebarState = function() {
+  const savedState = localStorage.getItem(&#39;sidebarState&#39;) || &#39;expanded&#39;;
+  const sidebar = document.querySelector(&#39;[data-section-id="common_sidebar"]&#39;);
+  
+  if (sidebar) {
+    sidebar.classList.add(savedState === &#39;collapsed&#39; ? &#39;sidebar-collapsed&#39; : &#39;sidebar-expanded&#39;);
+  }
+};
+
+// Notification utilities
+window.showNotification = function(message, type = &#39;info&#39;) {
+  const notification = document.createElement(&#39;div&#39;);
+  notification.className = `alert alert-${type} fixed top-4 right-4 w-96 z-50 shadow-lg`;
+  notification.innerHTML = `
+    <div class="flex items-center gap-2">
+      <span class="iconify" data-icon="heroicons:information-circle-solid" data-width="20"></span>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 5000);
+};
+
+// Process step management utilities
+window.APP_GLOBALS.processSteps = {
+  updateStepStatus: function(stepId, status) {
+    const step = document.querySelector(`[data-step-id="${stepId}"]`);
+    if (step) {
+      step.classList.remove(&#39;completed&#39;, &#39;active&#39;, &#39;pending&#39;);
+      step.classList.add(status);
+      
+      // Update icon based on status
+      const icon = step.querySelector(&#39;.step-icon&#39;);
+      if (icon) {
+        if (status === &#39;completed&#39;) {
+          icon.setAttribute(&#39;data-icon&#39;, &#39;heroicons:check-circle-solid&#39;);
+        } else if (status === &#39;active&#39;) {
+          icon.setAttribute(&#39;data-icon&#39;, &#39;heroicons:play-circle-solid&#39;);
+        } else {
+          icon.setAttribute(&#39;data-icon&#39;, &#39;heroicons:clock&#39;);
+        }
+      }
+    }
+  },
+  
+  makeStepClickable: function(stepId, detailsData) {
+    const step = document.querySelector(`[data-step-id="${stepId}"]`);
+    if (step) {
+      step.style.cursor = &#39;pointer&#39;;
+      step.onclick = function() {
+        navigateTo(&#39;result_detail_page&#39;);
+      };
+    }
+  }
+};
+
+// File upload utilities
+window.APP_GLOBALS.fileUpload = {
+  setupDropZone: function(dropZoneSelector) {
+    const dropZone = document.querySelector(dropZoneSelector);
+    if (!dropZone) return;
+    
+    [&#39;dragenter&#39;, &#39;dragover&#39;, &#39;dragleave&#39;, &#39;drop&#39;].forEach(eventName => {
+      dropZone.addEventListener(eventName, this.preventDefaults, false);
+    });
+    
+    [&#39;dragenter&#39;, &#39;dragover&#39;].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.add(&#39;dragover&#39;), false);
+    });
+    
+    [&#39;dragleave&#39;, &#39;drop&#39;].forEach(eventName => {
+      dropZone.addEventListener(eventName, () => dropZone.classList.remove(&#39;dragover&#39;), false);
+    });
+    
+    dropZone.addEventListener(&#39;drop&#39;, this.handleDrop, false);
+  },
+  
+  preventDefaults: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  },
+  
+  handleDrop: function(e) {
+    const files = e.dataTransfer.files;
+    window.APP_GLOBALS.fileUpload.handleFiles(files);
+  },
+  
+  handleFiles: function(files) {
+    Array.from(files).forEach(file => {
+      if (this.validateFile(file)) {
+        this.uploadFile(file);
+      }
+    });
+  },
+  
+  validateFile: function(file) {
+    const allowedTypes = [&#39;application/pdf&#39;, &#39;application/msword&#39;, &#39;application/vnd.openxmlformats-officedocument.wordprocessingml.document&#39;, &#39;text/plain&#39;];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (!allowedTypes.includes(file.type)) {
+      showNotification(&#39;不支持的文件类型，请上传PDF、Word或TXT文件&#39;, &#39;error&#39;);
+      return false;
+    }
+    
+    if (file.size > maxSize) {
+      showNotification(&#39;文件大小超过10MB限制&#39;, &#39;error&#39;);
+      return false;
+    }
+    
+    return true;
+  },
+  
+  uploadFile: function(file) {
+    // Simulate file upload process
+    showNotification(&#39;开始上传文件：&#39; + file.name, &#39;info&#39;);
+    
+    // Simulate upload progress
+    setTimeout(() => {
+      showNotification(&#39;文件上传成功，开始需求分析...&#39;, &#39;success&#39;);
+      this.startProcessing();
+    }, 2000);
+  },
+  
+  startProcessing: function() {
+    // Update first step to active
+    window.APP_GLOBALS.processSteps.updateStepStatus(&#39;requirement-analysis&#39;, &#39;active&#39;);
+    
+    // Simulate requirement analysis completion
+    setTimeout(() => {
+      window.APP_GLOBALS.processSteps.updateStepStatus(&#39;requirement-analysis&#39;, &#39;completed&#39;);
+      window.APP_GLOBALS.processSteps.makeStepClickable(&#39;requirement-analysis&#39;);
+      window.APP_GLOBALS.processSteps.updateStepStatus(&#39;test-generation&#39;, &#39;active&#39;);
+      
+      // Simulate test generation completion
+      setTimeout(() => {
+        window.APP_GLOBALS.processSteps.updateStepStatus(&#39;test-generation&#39;, &#39;completed&#39;);
+        window.APP_GLOBALS.processSteps.makeStepClickable(&#39;test-generation&#39;);
+        window.APP_GLOBALS.processSteps.updateStepStatus(&#39;test-execution&#39;, &#39;active&#39;);
+        
+        // Simulate test execution completion
+        setTimeout(() => {
+          window.APP_GLOBALS.processSteps.updateStepStatus(&#39;test-execution&#39;, &#39;completed&#39;);
+          window.APP_GLOBALS.processSteps.makeStepClickable(&#39;test-execution&#39;);
+          showNotification(&#39;所有流程步骤已完成！&#39;, &#39;success&#39;);
+        }, 4000);
+      }, 3000);
+    }, 5000);
+  }
+};
+
+// Initialize components when DOM is loaded
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+  initSidebarState();
+});
+
+})();
+</script><script>
+document.addEventListener(&#39;DOMContentLoaded&#39;, function() {
+    // DOM elements
+    const uploadDocHeaderBtn = document.getElementById(&#39;upload-doc-header-btn&#39;);
+    const uploadZone = document.getElementById(&#39;upload-zone&#39;);
+    const fileInfo = document.getElementById(&#39;file-info&#39;);
+    const fileNameEl = document.getElementById(&#39;file-name&#39;);
+    const fileSizeEl = document.getElementById(&#39;file-size&#39;);
+    const startAnalysisBtn = document.getElementById(&#39;start-analysis-btn&#39;);
+    const resetProcessBtn = document.getElementById(&#39;reset-process-btn&#39;);
+    const logList = document.getElementById(&#39;log-list&#39;);
+    const outputTitle = document.getElementById(&#39;output-title&#39;);
+    const progressLine = document.getElementById(&#39;progress-line&#39;);
+
+    const uploadControlSection = document.getElementById(&#39;DocumentUploadAndControl&#39;);
+    const processExecutionView = document.getElementById(&#39;AgentProcessExecutionView&#39;);
+
+    const fileInput = document.createElement(&#39;input&#39;);
+    fileInput.type = &#39;file&#39;;
+    fileInput.accept = &#39;.pdf,.doc,.docx,.txt&#39;;
+
+    // Page setup
+    if (typeof updateBreadcrumbs === &#39;function&#39;) {
+        updateBreadcrumbs({
+            current: &#39;Agent 工作台&#39;,
+            icon: &#39;heroicons:cog-6-tooth&#39;,
+        });
+    }
+    if (typeof setActiveSidebarItem === &#39;function&#39;) {
+        setActiveSidebarItem(&#39;agent_process_display_page&#39;);
+    }
+
+    // Event listeners
+    const triggerFileInput = () => fileInput.click();
+    uploadDocHeaderBtn.addEventListener(&#39;click&#39;, triggerFileInput);
+    uploadZone.addEventListener(&#39;click&#39;, triggerFileInput);
+    startAnalysisBtn.addEventListener(&#39;click&#39;, startAnalysis);
+    resetProcessBtn.addEventListener(&#39;click&#39;, resetProcess);
+
+    // File upload handlers
+    [&#39;dragenter&#39;, &#39;dragover&#39;, &#39;dragleave&#39;, &#39;drop&#39;].forEach(eventName => {
+        uploadZone.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    });
+    [&#39;dragenter&#39;, &#39;dragover&#39;].forEach(eventName => uploadZone.addEventListener(eventName, () => uploadZone.classList.add(&#39;dragover&#39;), false));
+    [&#39;dragleave&#39;, &#39;drop&#39;].forEach(eventName => uploadZone.addEventListener(eventName, () => uploadZone.classList.remove(&#39;dragover&#39;), false));
+    uploadZone.addEventListener(&#39;drop&#39;, handleFileSelect, false);
+    fileInput.addEventListener(&#39;change&#39;, handleFileSelect, false);
+
+    function handleFileSelect(event) {
+        const file = event.type === &#39;drop&#39; ? event.dataTransfer.files[0] : event.target.files[0];
+        if (file &amp;&amp; validateFile(file)) {
+            displayFileInfo(file);
+        }
+    }
+
+    function validateFile(file) {
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+            showNotification?.(&#39;文件大小超过10MB限制&#39;, &#39;error&#39;);
+            return false;
+        }
+        return true;
+    }
+
+    function displayFileInfo(file) {
+        fileNameEl.textContent = file.name;
+        fileSizeEl.textContent = `文件大小: ${(file.size / 1024).toFixed(2)} KB`;
+        fileInfo.classList.remove(&#39;hidden&#39;);
+        startAnalysisBtn.disabled = false;
+        showNotification?.(&#39;文件已就绪，可以开始分析&#39;, &#39;success&#39;);
+    }
+
+    function startAnalysis() {
+        startAnalysisBtn.classList.add(&#39;loading&#39;, &#39;btn-disabled&#39;);
+        showNotification?.(&#39;流程开始...&#39;, &#39;info&#39;);
+
+        uploadControlSection.classList.add(&#39;fade-out&#39;);
+        setTimeout(() => {
+            uploadControlSection.classList.add(&#39;hidden&#39;);
+            processExecutionView.classList.remove(&#39;hidden&#39;);
+            processExecutionView.classList.add(&#39;fade-in&#39;);
+            resetProcessBtn.classList.remove(&#39;hidden&#39;);
+            runProcessSimulation();
+        }, 500);
+    }
+    
+    function resetProcess() {
+        processExecutionView.classList.remove(&#39;fade-in&#39;);
+        processExecutionView.classList.add(&#39;fade-out&#39;);
+        
+        setTimeout(() => {
+            processExecutionView.classList.add(&#39;hidden&#39;);
+            uploadControlSection.classList.remove(&#39;hidden&#39;, &#39;fade-out&#39;);
+            uploadControlSection.classList.add(&#39;fade-in&#39;);
+        }, 500);
+
+        // Reset UI
+        fileInfo.classList.add(&#39;hidden&#39;);
+        startAnalysisBtn.disabled = true;
+        startAnalysisBtn.classList.remove(&#39;loading&#39;, &#39;btn-disabled&#39;);
+        resetProcessBtn.classList.add(&#39;hidden&#39;);
+        fileInput.value = &#39;&#39;;
+        progressLine.style.width = &#39;0%&#39;;
+        outputTitle.textContent = "Agent 执行过程描述";
+
+        document.querySelectorAll(&#39;.process-step&#39;).forEach(step => {
+            step.classList.remove(&#39;active&#39;, &#39;completed&#39;);
+            step.classList.add(&#39;pending&#39;);
+            step.querySelector(&#39;.view-details-btn&#39;).classList.add(&#39;hidden&#39;);
+            step.onclick = null;
+        });
+
+        logList.innerHTML = &#39;<p class="text-base-content/60 animate-pulse">等待开始执行...</p>&#39;;
+        showNotification?.(&#39;流程已重置&#39;, &#39;info&#39;);
+    }
+
+    function runProcessSimulation() {
+        logList.innerHTML = &#39;&#39;;
+        const steps = [
+            { id: &#39;requirement-analysis&#39;, name: &#39;需求分析&#39;, logs: [&#39;正在解析需求文档...&#39;, &#39;识别关键实体...&#39;, &#39;需求分析已完成。&#39;] },
+            { id: &#39;test-generation&#39;, name: &#39;用例生成&#39;, logs: [&#39;开始生成测试用例...&#39;, &#39;创建功能性测试用例...&#39;, &#39;生成边界值测试用例...&#39;, &#39;用例生成已完成。&#39;] },
+            { id: &#39;test-execution&#39;, name: &#39;用例执行&#39;, logs: [&#39;准备测试环境...&#39;, &#39;执行测试用例 1/20...&#39;, &#39;执行测试用例 15/20...&#39;, &#39;所有用例执行完毕。&#39;] }
+        ];
+        let stepIndex = 0;
+        let logDelay = 500;
+
+        function processNextStep() {
+            if (stepIndex > 0) {
+                updateStepStatus(steps[stepIndex - 1].id, &#39;completed&#39;);
+            }
+            if (stepIndex < steps.length) {
+                const currentStep = steps[stepIndex];
+                updateStepStatus(currentStep.id, &#39;active&#39;);
+                
+                let logIndex = 0;
+                function showNextLog() {
+                    if (logIndex < currentStep.logs.length) {
+                        addLogMessage(currentStep.logs[logIndex], logIndex === 0 ? &#39;active&#39; : &#39;info&#39;);
+                        logIndex++;
+                        setTimeout(showNextLog, logDelay * 2);
+                    } else {
+                        stepIndex++;
+                        setTimeout(processNextStep, logDelay * 3);
+                    }
+                }
+                showNextLog();
+            } else {
+                updateStepStatus(steps[steps.length - 1].id, &#39;completed&#39;);
+                addLogMessage(&#39;所有流程已完成！&#39;, &#39;success&#39;);
+                showNotification?.(&#39;所有流程已完成！&#39;, &#39;success&#39;);
+            }
+        }
+        processNextStep();
+    }
+
+    function addLogMessage(message, type = &#39;info&#39;) {
+        const iconMap = {
+            &#39;active&#39;: { icon: &#39;heroicons:arrow-path&#39;, class: &#39;text-primary animate-spin&#39; },
+            &#39;info&#39;: { icon: &#39;heroicons:chat-bubble-left-right&#39;, class: &#39;text-base-content/70&#39; },
+            &#39;success&#39;: { icon: &#39;heroicons:check-circle&#39;, class: &#39;text-success&#39; },
+        };
+        const p = document.createElement(&#39;p&#39;);
+        p.className = &#39;log-item flex items-center gap-2&#39;;
+        p.innerHTML = `<span class="iconify ${iconMap[type].class}" data-icon="${iconMap[type].icon}" data-width="16"></span><span>${message}</span>`;
+        logList.appendChild(p);
+        logList.scrollTop = logList.scrollHeight;
+    }
+
+    function updateStepStatus(stepId, status) {
+        const step = document.querySelector(`[data-step-id="${stepId}"]`);
+        if (!step) return;
+
+        step.classList.remove(&#39;pending&#39;, &#39;active&#39;, &#39;completed&#39;);
+        step.classList.add(status);
+        
+        if (status === &#39;completed&#39;) {
+            step.querySelector(&#39;.view-details-btn&#39;).classList.remove(&#39;hidden&#39;);
+            step.onclick = () => showStepDetails(stepId);
+        }
+
+        const completedCount = document.querySelectorAll(&#39;.process-step.completed&#39;).length;
+        const totalSteps = 3;
+        progressLine.style.width = `${Math.min(100, (completedCount / (totalSteps-1)) * 100 - (100/(totalSteps-1))/2)}%`;
+        if (completedCount === totalSteps) {
+            progressLine.style.width = &#39;100%&#39;;
+        }
+    }
+    
+    window.showStepDetails = function(stepId) {
+        const stepDetails = {
+            &#39;requirement-analysis&#39;: { title: &#39;需求分析结果&#39;, content: &#39;需求分析完成，已成功提取关键需求点: 登录、注册、密码找回...<br>文档完整性: 95%<br>可测试性评估: 良好&#39; },
+            &#39;test-generation&#39;: { title: &#39;用例生成结果&#39;, content: &#39;共生成 58 个测试用例。<br> - 功能用例: 40<br> - 性能用例: 8<br> - 安全用例: 10<br>覆盖率: 92%&#39; },
+            &#39;test-execution&#39;: { title: &#39;用例执行结果&#39;, content: &#39;执行用例 58 个，成功 55 个，失败 3 个。<br>失败用例: TC-008, TC-023, TC-041<br>详情请在<a class="link link-primary" onclick="navigateTo(\&#39;result_detail_page\&#39;)">执行历史</a>中查看完整报告。&#39; }
+        };
+
+        const detail = stepDetails[stepId];
+        outputTitle.textContent = detail.title;
+        logList.innerHTML = `<div class="prose text-base-content">${detail.content}</div>`;
+        showNotification?.(`正在查看 ${detail.title}`, &#39;info&#39;);
+    }
+
+});
+</script>
+  
+
+<script>
+    setTimeout(() => {
+      Holder.run({
+        domain: "placehold.co"
+      })
+    }, 100)
+  </script></body></html>'></iframe>
+                    </div>
+                  </div>
+
+                </body>
+                </html>
+            

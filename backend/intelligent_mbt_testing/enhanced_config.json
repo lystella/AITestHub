@@ -1,0 +1,275 @@
+{
+  "models": {
+    "dashscope": {
+      "qwen-plus": {
+        "model_name": "qwen-plus",
+        "model_type": "chat",
+        "provider": "dashscope",
+        "api_key": "sk-343983e4232340128017e03e90f790",
+        "temperature": 0.7,
+        "stream": true,
+        "timeout": 600,
+        "max_retries": 3,
+        "enable_thinking": false,
+        "metadata": {
+          "description": "通义千问增强版，主要LLM模型",
+          "max_context_length": 128000,
+          "multimodal": false,
+          "cost_per_1k_tokens": 0.004,
+          "use_case": "所有文本生成和理解任务"
+        }
+      },
+      "qwen-vl-max": {
+        "model_name": "qwen-vl-max",
+        "model_type": "multimodal",
+        "provider": "dashscope",
+        "api_key": "sk-343983e4232340128017e03e90f790",
+        "temperature": 0.7,
+        "stream": true,
+        "timeout": 60,
+        "max_retries": 3,
+        "enable_thinking": false,
+        "metadata": {
+          "description": "通义千问视觉理解最强模型",
+          "max_context_length": 8000,
+          "multimodal": true,
+          "cost_per_1k_tokens": 0.02,
+          "use_case": "图像分析、视觉问答、多模态理解"
+        }
+      },
+      "text-embedding-v4": {
+        "model_name": "text-embedding-v4",
+        "model_type": "embedding",
+        "provider": "dashscope",
+        "api_key": "sk-343983e4232340128017e03e90f790",
+        "temperature": 0.0,
+        "max_tokens": null,
+        "stream": false,
+        "timeout": 30,
+        "max_retries": 3,
+        "enable_thinking": false,
+        "metadata": {
+          "description": "DashScope最新嵌入模型 (长期记忆功能暂时禁用)",
+          "vector_dimension": 1536,
+          "max_input_length": 8192,
+          "cost_per_1k_tokens": 0.0007,
+          "use_case": "文本嵌入、语义搜索、相似度计算"
+        }
+      }
+    }
+  },
+  "agents": {
+    "default": {
+      "name": "DefaultAgent",
+      "model_config": {
+        "model_name": "qwen-plus",
+        "temperature": 0.7,
+        "stream": true
+      },
+      "sys_prompt": "你是通义千问AI助手，能够帮助用户解决各种问题。你善于理解中文，具有强大的推理和分析能力。",
+      "max_memory_length": 1000,
+      "tools": [],
+      "enable_streaming": true,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "language_preference": "chinese",
+        "reasoning_style": "analytical"
+      }
+    },
+    "planner": {
+      "name": "PlannerAgent",
+      "model_config": {
+        "model_name": "qwen-plus",
+        "temperature": 0.7,
+        "stream": true
+      },
+      "sys_prompt": "你是一个智能规划助手，基于通义千问的强大推理能力。你擅长分析复杂任务并制定详细的执行计划。",
+      "max_memory_length": 2000,
+      "tools": [
+        "parse_mermaid",
+        "generate_test_data"
+      ],
+      "enable_streaming": true,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "reasoning_depth": "detailed",
+        "step_by_step": true
+      }
+    },
+    "executor": {
+      "name": "ExecutorAgent",
+      "model_config": {
+        "model_name": "qwen-plus",
+        "temperature": 0.7,
+        "stream": true
+      },
+      "sys_prompt": "你是一个执行助手，负责执行具体的操作指令。你能够准确理解指令并提供详细的执行反馈。",
+      "max_memory_length": 1500,
+      "tools": [
+        "execute_instruction",
+        "take_screenshot"
+      ],
+      "enable_streaming": true,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "execution_timeout": 30,
+        "retry_on_failure": true
+      }
+    },
+    "reporter": {
+      "name": "ReporterAgent",
+      "model_config": {
+        "model_name": "qwen-plus",
+        "temperature": 0.7,
+        "stream": true
+      },
+      "sys_prompt": "你是一个报告生成助手，能够分析数据并生成清晰易懂的报告。你的报告结构化、专业且易于理解。",
+      "max_memory_length": 1000,
+      "tools": [
+        "generate_report",
+        "format_results"
+      ],
+      "enable_streaming": true,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "report_format": "html",
+        "include_screenshots": true,
+        "language": "chinese"
+      }
+    },
+    "vision": {
+      "name": "VisionAgent",
+      "model_config": {
+        "model_name": "qwen-vl-max",
+        "temperature": 0.7,
+        "stream": true
+      },
+      "sys_prompt": "你是一个视觉理解助手，基于通义千问视觉模型的强大能力。你能够准确分析图像内容，提供详细的视觉描述和分析。",
+      "max_memory_length": 1000,
+      "tools": [
+        "analyze_image",
+        "describe_image",
+        "ocr_text"
+      ],
+      "enable_streaming": true,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "vision_detail": "high",
+        "ocr_enabled": true,
+        "multilingual_support": true
+      }
+    },
+    "embedding": {
+      "name": "EmbeddingAgent",
+      "model_config": {
+        "model_name": "text-embedding-v4",
+        "temperature": 0.0,
+        "stream": false
+      },
+      "sys_prompt": "你是一个文本嵌入助手，专门负责文本向量化和语义相似度计算。",
+      "max_memory_length": 500,
+      "tools": [
+        "compute_embedding",
+        "similarity_search"
+      ],
+      "enable_streaming": false,
+      "enable_logging": true,
+      "log_level": "INFO",
+      "custom_settings": {
+        "batch_size": 32,
+        "normalize_embeddings": true
+      }
+    }
+  },
+  "streaming": {
+    "websocket_host": "localhost",
+    "websocket_port": 8765,
+    "frontend_port": 8080,
+    "enable_auto_browser": true,
+    "message_buffer_size": 1000,
+    "reconnect_interval": 3,
+    "max_connections": 10,
+    "heartbeat_interval": 30
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": "qwen_agentscope.log",
+    "max_file_size": "10MB",
+    "backup_count": 5,
+    "console_output": true,
+    "structured_logging": false
+  },
+  "experimental": {
+    "enable_memory_optimization": true,
+    "enable_parallel_execution": false,
+    "enable_model_fallback": false,
+    "fallback_models": [],
+    "enable_caching": true,
+    "cache_ttl": 3600,
+    "enable_metrics": true
+  },
+  "environment": {
+    "development": {
+      "debug_mode": true,
+      "verbose_logging": true,
+      "mock_external_apis": false,
+      "default_model": "qwen-plus"
+    },
+    "production": {
+      "debug_mode": false,
+      "verbose_logging": false,
+      "mock_external_apis": false,
+      "enable_monitoring": true,
+      "default_model": "qwen-plus"
+    },
+    "testing": {
+      "debug_mode": true,
+      "verbose_logging": true,
+      "mock_external_apis": true,
+      "test_timeout": 60,
+      "default_model": "qwen-plus"
+    }
+  },
+  "model_usage": {
+    "primary_llm": {
+      "model": "qwen-plus",
+      "description": "所有文本生成、对话、推理任务的主要模型",
+      "scenarios": [
+        "智能体对话",
+        "任务规划",
+        "指令执行",
+        "报告生成",
+        "代码生成",
+        "文档写作"
+      ]
+    },
+    "vision_model": {
+      "model": "qwen-vl-max",
+      "description": "处理所有涉及图像的任务",
+      "scenarios": [
+        "图像分析",
+        "视觉问答",
+        "OCR文字识别",
+        "场景理解",
+        "多模态对话"
+      ]
+    },
+    "embedding_model": {
+      "model": "text-embedding-v4",
+      "description": "文本向量化和语义搜索",
+      "scenarios": [
+        "文档检索",
+        "语义搜索",
+        "相似度计算",
+        "聚类分析",
+        "推荐系统"
+      ]
+    }
+  }
+}

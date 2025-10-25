@@ -1,0 +1,179 @@
+{
+  "workspace_path": "./enhanced_workspace",
+  "project_name": "intelligent_mbt_testing",
+  "run_name": "enhanced_run",
+  "agentscope_config": {
+    "logging_level": "INFO",
+    "studio_url": null
+  },
+  "agents_config": {
+    "coordinator": {
+      "agent_name": "coordinator",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    },
+    "analyzer": {
+      "agent_name": "analyzer",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    },
+    "planner": {
+      "agent_name": "planner",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    },
+    "data_agent": {
+      "agent_name": "data_agent",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    },
+    "executor": {
+      "agent_name": "executor",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    },
+    "reporter": {
+      "agent_name": "reporter",
+      "llm_model": "qwen-plus",
+      "multimodal_model": "qwen-vl-plus",
+      "embedding_model": "text-embedding-v3",
+      "temperature": null,
+      "max_tokens": null,
+      "enable_long_term_memory": true,
+      "enable_session_management": true,
+      "enable_tracing": false,
+      "enable_hooks": true,
+      "memory_config": {
+        "vector_store": "qdrant",
+        "memory_type": "semantic",
+        "agent_specific": true,
+        "enable_embedding": true
+      },
+      "session_config": {
+        "save_dir": "./sessions",
+        "auto_save_interval": 300,
+        "max_history_size": 1000
+      },
+      "tracing_config": {
+        "endpoint": "http://localhost:4318",
+        "service_name": "intelligent_mbt_testing",
+        "enable_logging": true
+      }
+    }
+  }
+}

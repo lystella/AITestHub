@@ -1,0 +1,14 @@
+{
+  "id": "system_initialization_1760669104082",
+  "agent_type": "system",
+  "experience_type": "initialization",
+  "content": "系统初始化完成",
+  "embedding": [],
+  "metadata": {
+    "system_id": "9147b55b"
+  },
+  "timestamp": "2025-10-17T10:45:04.082143",
+  "success_score": 0.5,
+  "usage_count": 0,
+  "last_accessed": null
+}

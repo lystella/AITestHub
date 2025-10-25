@@ -1,0 +1,20 @@
+{
+  "id": "coordinator_success_1758812839388",
+  "agent_type": "coordinator",
+  "experience_type": "success",
+  "content": "成功协调了复杂的多智能体任务，通过合理分工提高了效率",
+  "embedding": [],
+  "metadata": {
+    "feedback_history": [
+      {
+        "score": 0.95,
+        "content": "用户反馈非常好",
+        "timestamp": "2025-09-25T23:07:19.390241"
+      }
+    ]
+  },
+  "timestamp": "2025-09-25T23:07:19.388235",
+  "success_score": 0.925,
+  "usage_count": 0,
+  "last_accessed": null
+}

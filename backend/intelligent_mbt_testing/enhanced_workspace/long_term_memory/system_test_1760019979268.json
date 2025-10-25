@@ -1,0 +1,14 @@
+{
+  "id": "system_test_1760019979268",
+  "agent_type": "system",
+  "experience_type": "test",
+  "content": "这是一个测试经验",
+  "embedding": [],
+  "metadata": {
+    "test": true
+  },
+  "timestamp": "2025-10-09T22:26:19.268958",
+  "success_score": 0.8,
+  "usage_count": 0,
+  "last_accessed": null
+}
