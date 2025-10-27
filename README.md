@@ -51,7 +51,7 @@ AITestHub/
 
 1. **克隆项目**
 ```bash
-git clone <repository-url>
+git clone https://github.com/lystella/AITestHub.git
 cd AITestHub
 ```
 
